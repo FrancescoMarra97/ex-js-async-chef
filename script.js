@@ -59,7 +59,9 @@ const getChefBirthday = async (id) => {
     } catch (error) {
         throw new Error(`Non posso recuperare user id ${ricetta.userId}`);
     }
-
+    if (!user) {
+        throw new Error(`user con id ${id} non trovato o non valido`);
+    }
     return dayjs(user.birthDate).format('DD/MM/YYYY')
 }
 
