@@ -20,7 +20,12 @@ getChefBirthday(1)
   .then(birthday => console.log("Data di nascita dello chef:", birthday))
   .catch(error => console.error("Errore:", error.message));
 Esempio di output atteso
-Data di nascita dello chef: 1990-06-1 */
+Data di nascita dello chef: 1990-06-1 
+
+🎯 Bonus 1
+Attualmente, se la prima richiesta non trova una ricetta, la seconda richiesta potrebbe comunque essere eseguita causando errori a cascata.
+
+Modifica getChefBirthday(id) per intercettare eventuali errori prima di fare la seconda richiesta.*/
 
 
 async function fetchJson(url) {
@@ -30,8 +35,24 @@ async function fetchJson(url) {
 }
 
 const getChefBirthday = async (id) => {
-    const ricetta = await fetchJson(`https://dummyjson.com/recipes/${id}`)
-    const user = await fetchJson(`https://dummyjson.com/users/${ricetta.userId}`)
+    let ricetta
+    try {
+        ricetta = await fetchJson(`https://dummyjson.com/recipes/${id}`)
+    } catch (error) {
+        throw new Error(`Non posso recuperare ricetta id ${id}`);
+    }
+
+    if (!ricetta || !ricetta.userId) {
+        throw new Error(`Ricetta con id ${id} non trovata o non valida`);
+    }
+
+    let user
+    try {
+        user = await fetchJson(`https://dummyjson.com/users/${ricetta.userId}`)
+    } catch (error) {
+        throw new Error(`Non posso recuperare user id ${ricetta.userId}`);
+    }
+
     return user.birthDate;
 }
 
