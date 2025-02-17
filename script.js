@@ -25,7 +25,14 @@ Data di nascita dello chef: 1990-06-1
 🎯 Bonus 1
 Attualmente, se la prima richiesta non trova una ricetta, la seconda richiesta potrebbe comunque essere eseguita causando errori a cascata.
 
-Modifica getChefBirthday(id) per intercettare eventuali errori prima di fare la seconda richiesta.*/
+Modifica getChefBirthday(id) per intercettare eventuali errori prima di fare la seconda richiesta.
+
+
+🎯 Bonus 2
+Utilizza la libreria dayjs per formattare la data di nascita nel formato giorno/mese/anno.
+Esempio di output atteso con formattazione
+Data di nascita dello chef: 15/06/1990
+*/
 
 
 async function fetchJson(url) {
@@ -53,7 +60,7 @@ const getChefBirthday = async (id) => {
         throw new Error(`Non posso recuperare user id ${ricetta.userId}`);
     }
 
-    return user.birthDate;
+    return dayjs(user.birthDate).format('DD/MM/YYYY')
 }
 
 (async () => {
